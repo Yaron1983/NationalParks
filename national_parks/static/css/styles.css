@@ -1,0 +1,577 @@
+/* Reset and base */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: #f0f4f3; /* צבע טבעי */
+  color: #1b1b1b;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* Container */
+.container {
+  width: 90%;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+header {
+  background-color: #2e7d32; /* ירוק טבע */
+  padding: 16px 0;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+}
+
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logo {
+  font-weight: 900;
+  font-size: 1.8rem;
+  color: #ffffff;
+  cursor: default;
+}
+
+.logo-link {
+  text-decoration: none;
+  color: inherit;
+}
+
+.logo-link:hover {
+  color: #a5d6a7;
+}
+
+nav {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.user-greet {
+  font-weight: 600;
+  margin-right: 12px;
+}
+
+/* Buttons */
+.btn {
+  background-color: #2e7d32;
+  color: white;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 0.9rem;
+}
+
+.btn:hover {
+  background-color: #1b5e20;
+}
+
+/* --- Grid of parks --- */
+.parks-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 24px;
+  padding-bottom: 40px;
+}
+
+/* --- Forms wrapper --- */
+form {
+  max-width: 400px;
+  margin: 24px auto;
+  padding: 24px;
+  background: #ffffff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+form h2 {
+  text-align: center;
+  color: #2e7d32;
+  margin-bottom: 20px;
+  font-size: 1.8rem;
+}
+
+/* --- Form fields --- */
+form label {
+  font-weight: 600;
+  display: block;
+  margin-bottom: 6px;
+  color: #333;
+}
+
+form input[type="text"],
+form input[type="password"],
+form input[type="email"],
+form textarea,
+form select {
+  width: 100%;
+  padding: 10px 12px;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  margin-bottom: 16px;
+  font-size: 1rem;
+  box-sizing: border-box;
+}
+
+form input:focus,
+form textarea:focus,
+form select:focus {
+  border-color: #2e7d32;
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(46,125,50,0.2);
+}
+
+/* --- Buttons --- */
+form button {
+  width: 100%;
+  background-color: #2e7d32;
+  color: white;
+  padding: 10px 0;
+  font-size: 1rem;
+  font-weight: 600;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+form button:hover {
+  background-color: #1b5e20;
+}
+
+/* --- Links --- */
+form a {
+  display: inline-block;
+  margin-top: 12px;
+  text-decoration: none;
+  color: #388e3c;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+form a:hover {
+  color: #1b5e20;
+}
+
+/* --- Logged out page --- */
+.logged-out {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.logged-out p {
+  font-size: 1rem;
+  margin-bottom: 12px;
+  color: #555;
+}
+
+/* --- Park card --- */
+.park-card {
+  background: #f0f4f1; /* צבע טבעי */
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.park-card:hover {
+  transform: scale(1.04);
+  box-shadow: 0 10px 22px rgba(0,0,0,0.3);
+}
+
+/* --- Image wrapper --- */
+.park-image-wrapper {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  overflow: hidden;
+}
+
+.park-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.park-placeholder {
+  width: 100%;
+  height: 180px;
+  background: linear-gradient(135deg, #cfd8dc, #e0f2f1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  color: #555;
+  font-style: italic;
+}
+
+/* --- Overlay: name + flag --- */
+.park-overlay {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: rgba(0,0,0,0.5);
+  color: white;
+  padding: 6px 10px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: background 0.3s ease;
+}
+
+.park-card:hover .park-overlay {
+  background: rgba(0,0,0,0.65);
+}
+
+.park-overlay h2 {
+  margin: 0;
+  font-size: 1rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.park-flag {
+  width: 28px;
+  height: 20px;
+  object-fit: cover;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+}
+
+.park-card:hover .park-flag {
+  transform: translateY(-3px);
+}
+
+/* --- Park info under image --- */
+.park-info {
+  padding: 12px;
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.park-info p {
+  font-size: 0.9rem;
+  color: #4e4e4e;
+  margin: 0;
+}
+
+/* --- Park Detail Page --- */
+.park-detail {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.park-header h1 {
+  font-size: 2.2rem;
+  color: #2e7d32;
+  margin-bottom: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.park-location {
+  font-size: 1.1rem;
+  color: #4e4e4e;
+  margin: 0;
+}
+
+.park-website a {
+  color: #388e3c;
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.park-website a:hover {
+  color: #1b5e20;
+  text-decoration: underline;
+}
+
+.park-image-container {
+  margin-bottom: 24px;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.park-detail-image {
+  width: 100%;
+  max-height: 400px;
+  object-fit: cover;
+  display: block;
+}
+
+.park-description {
+  margin-bottom: 32px;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.park-description h2 {
+  color: #2e7d32;
+  margin-bottom: 16px;
+  font-size: 1.5rem;
+}
+
+.park-description p {
+  color: #4e4e4e;
+  line-height: 1.6;
+  font-size: 1rem;
+}
+
+/* --- Ratings section --- */
+.park-rating-section {
+  margin-bottom: 24px;
+  background: #ffffff;
+  padding: 16px 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+}
+
+.average-rating {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 12px;
+}
+
+.rating-stars {
+  color: #ffc107;
+  font-size: 1.2rem;
+}
+
+.rating-text {
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.no-ratings {
+  font-style: italic;
+  color: #777;
+}
+
+/* Rating form */
+.rating-form h3 {
+  margin-bottom: 8px;
+}
+
+.rating-input {
+  margin-bottom: 12px;
+}
+
+.rating-input label {
+  display: block;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.rating-input select,
+.rating-input textarea {
+  width: 100%;
+  padding: 8px 10px;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+  font-size: 1rem;
+}
+
+.rating-input textarea {
+  resize: vertical;
+  min-height: 60px;
+}
+
+/* --- Back link --- */
+.back-link {
+  margin-top: 24px;
+  text-align: left;
+}
+
+.back-link .btn {
+  background-color: #2e7d32;
+  padding: 8px 16px;
+  border-radius: 4px;
+  font-weight: 600;
+  color: white;
+  text-decoration: none;
+  transition: background-color 0.3s ease;
+}
+
+.back-link .btn:hover {
+  background-color: #1b5e20;
+}
+
+/* --- Responsive tweaks --- */
+@media (max-width: 600px) {
+  .parks-grid {
+    grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+  }
+}
+/* 🔎 Search form */
+.search-form {
+  display: flex;
+  gap: 10px;
+  justify-content: center;
+  align-items: center;
+  margin: 20px auto;
+  flex-wrap: wrap;
+  max-width: 800px;
+}
+
+/* תיבת החיפוש */
+.search-form input[type="text"] {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  flex: 1;
+  min-width: 200px;
+  font-size: 1rem;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-form input[type="text"]:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
+  outline: none;
+}
+
+/* dropdown למדינות */
+.search-form select {
+  padding: 10px 14px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  background: white;
+  font-size: 1rem;
+  min-width: 150px;
+  transition: border 0.2s ease, box-shadow 0.2s ease;
+}
+
+.search-form select:focus {
+  border-color: #4CAF50;
+  box-shadow: 0 0 4px rgba(76, 175, 80, 0.4);
+  outline: none;
+}
+
+/* כפתור החיפוש */
+.search-form button {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 8px;
+  background-color: #4CAF50;
+  color: white;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.1s ease;
+}
+
+.search-form button:hover {
+  background-color: #43a047;
+  transform: translateY(-2px);
+}
+
+.search-form button:active {
+  transform: translateY(0);
+}
+.trip-planner-container {
+    max-width: 700px;
+    margin: 20px auto;
+    padding: 15px;
+    background-color: #fdfdfd;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+}
+
+.trip-planner-container h1 {
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+.trip-planner-container form {
+    margin-bottom: 20px;
+}
+
+.trip-planner-container textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    font-size: 1rem;
+}
+
+.trip-planner-container .btn {
+    display: inline-block;
+    padding: 8px 15px;
+    margin-top: 10px;
+    background-color: #2e7d32;
+    color: white;
+    text-decoration: none;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+}
+
+.trip-planner-container .btn:hover {
+    background-color: #1b5e20;
+}
+
+.trip-plan {
+    background-color: #f0f4f3;
+    padding: 20px;
+    border-radius: 12px;
+    margin-top: 20px;
+    box-shadow: 0 3px 8px rgba(0,0,0,0.08);
+    font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+    line-height: 1.6;
+}
+
+.trip-plan h2 {
+    margin-top: 0;
+    margin-bottom: 15px;
+    font-size: 1.4rem;
+    color: #2e7d32;
+    border-bottom: 2px solid #c8e6c9;
+    padding-bottom: 5px;
+}
+
+.plan-text p {
+    margin-bottom: 12px;
+}
+
+.plan-text ul, .plan-text ol {
+    padding-left: 20px;
+    margin-bottom: 12px;
+}
+
+.plan-text li {
+    margin-bottom: 6px;
+}
+
+.back-link {
+    margin-top: 15px;
+    text-align: left;
+}

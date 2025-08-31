@@ -1,0 +1,121 @@
+{% extends "base.html" %}
+
+{% block title %}{{ park.name }}{% endblock %}
+
+{% block content %}
+<div class="park-header">
+    <h1 class="park-title">
+        {{ park.name }}
+        {% if park.flag %}
+            <img src="{{ park.flag.url }}" alt="{{ park.country }}" class="park-title-flag" />
+        {% endif %}
+    </h1>
+    {% if park.location %}
+      <p class="park-location">📍 {{ park.location }}</p>
+    {% endif %}
+    {% if park.country or park.region %}
+      <p class="park-location">
+        {% if park.country %}{{ park.country }}{% endif %}
+        {% if park.country and park.region %}, {% endif %}
+        {% if park.region %}{{ park.region }}{% endif %}
+      </p>
+    {% endif %}
+    {% if park.official_website %}
+      <p class="park-website">
+        <a href="{{ park.official_website }}" target="_blank" rel="noopener noreferrer">
+          🌐 Official Website
+        </a>
+      </p>
+    {% endif %}
+</div>
+
+  {% if park.image %}
+    <div class="park-image-container">
+      <img src="{{ park.image.url }}" alt="{{ park.name }}" class="park-detail-image" />
+    </div>
+  {% endif %}
+
+  <div class="park-description">
+    <h2>About this park</h2>
+    <p>{{ park.description }}</p>
+  </div>
+
+  <!-- Ratings and Reviews -->
+  <div class="park-rating-section">
+    <h2>Ratings</h2>
+    {% if average_rating %}
+      <div class="average-rating">
+        <span class="rating-stars">
+          {% for i in "12345" %}
+            {% if forloop.counter <= average_rating %}
+              ⭐
+            {% else %}
+              ☆
+            {% endif %}
+          {% endfor %}
+        </span>
+        <span class="rating-text">{{ average_rating }} / 5 ({{ park.ratings.count }} ratings)</span>
+      </div>
+    {% else %}
+      <p class="no-ratings">No ratings yet. Be the first to rate this park!</p>
+    {% endif %}
+
+    {% if user.is_authenticated %}
+      <div class="rating-form">
+        <h3>Rate this park</h3>
+        <form method="post" action="{% url 'rate_park' park.id %}">
+          {% csrf_token %}
+          <div class="rating-input">
+            <label for="score">Your rating:</label>
+            <select name="score" id="score" required>
+              <option value="">Select rating</option>
+              <option value="1">1 - Poor</option>
+              <option value="2">2 - Fair</option>
+              <option value="3">3 - Good</option>
+              <option value="4">4 - Very Good</option>
+              <option value="5">5 - Excellent</option>
+            </select>
+          </div>
+          <div class="rating-input">
+            <label for="comment">Your review (optional):</label>
+            <textarea id="comment" name="comment" placeholder="Share your thoughts about this park..."></textarea>
+          </div>
+          <button type="submit" class="btn">Submit Rating</button>
+        </form>
+      </div>
+    {% else %}
+      <div class="login-prompt">
+        <p><a href="{% url 'login' %}">Log in</a> to rate this park.</p>
+      </div>
+    {% endif %}
+  </div>
+
+  <div class="reviews-section">
+    <h2>Recent Reviews</h2>
+    {% if ratings %}
+      <ul class="reviews-list">
+        {% for r in ratings %}
+          <li class="review-item">
+            <div class="review-header">
+              <span class="review-user">{{ r.user.username }}</span>
+              <span class="review-score">{{ r.score }} / 5</span>
+              <span class="review-date">{{ r.created_at|date:"Y-m-d H:i" }}</span>
+            </div>
+            {% if r.comment %}
+              <p class="review-comment">{{ r.comment }}</p>
+            {% endif %}
+          </li>
+        {% endfor %}
+      </ul>
+    {% else %}
+      <p class="no-ratings">No reviews yet.</p>
+    {% endif %}
+  </div>
+  <div class="trip-link">
+  <a href="{% url 'trip_planner' park.id %}" class="btn">Plan a trip with AI</a>
+</div>
+  <div class="back-link">
+    <a href="{% url 'home' %}" class="btn">← Back to Parks</a>
+  </div>
+</div>
+{% endblock %}

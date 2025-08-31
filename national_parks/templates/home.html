@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block title %}Home{% endblock %}
+
+{% block content %}
+  {% if user.is_authenticated %}
+    <p>Hi {{ user.username }}!</p>
+  {% else %}
+    <p>You are not logged in</p>
+  {% endif %}
+
+  <h2>National Parks</h2>
+  <form method="get" class="search-form">
+  <input type="text" name="q" placeholder="Search parks..." value="{{ request.GET.q }}">
+
+  <select name="country">
+    <option value="">All countries</option>
+    {% for c in countries %}
+      <option value="{{ c }}" {% if request.GET.country == c %}selected{% endif %}>{{ c }}</option>
+    {% endfor %}
+  </select>
+
+  <button type="submit" class="btn">Search</button>
+</form>
+
+  <div class="parks-grid">
+    {% for park in parks %}
+        <a href="{% url 'park_detail' park.id %}" class="park-card-link">
+            <div class="park-card">
+                <div class="park-image-wrapper">
+                    {% if park.image %}
+                        <img src="{{ park.image.url }}" alt="{{ park.name }}" class="park-image" />
+                    {% else %}
+                        <div class="park-placeholder">No Image Available</div>
+                    {% endif %}
+
+                    <!-- Overlay עם שם ודגל -->
+                    <div class="park-overlay">
+                        <h2>
+                            {{ park.name }}
+                            {% if park.flag %}
+                                <img src="{{ park.flag.url }}" alt="{{ park.country }}" class="park-flag" />
+                            {% endif %}
+                        </h2>
+                    </div>
+                </div>
+            </div>
+        </a>
+    {% empty %}
+        <p>No parks found.</p>
+    {% endfor %}
+  </div>
+{% endblock %}

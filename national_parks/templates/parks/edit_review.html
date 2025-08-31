@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+
+{% block title %}Edit Review - {{ park.name }}{% endblock %}
+
+{% block content %}
+<div class="park-detail">
+    <h2>Edit Review for {{ park.name }}</h2>
+<form method="post">
+    {% csrf_token %}
+    <label>Score (1-5):
+        <input type="number" name="score" value="{{ review.score }}" min="1" max="5">
+    </label>
+    <br>
+    <label>Comment:
+        <textarea name="comment">{{ review.comment }}</textarea>
+    </label>
+    <br>
+    <button type="submit">Update Review</button>
+</form>
+<a href="{% url 'park_detail' park.id %}">Back to park</a>
+</div>
+{% endblock %}

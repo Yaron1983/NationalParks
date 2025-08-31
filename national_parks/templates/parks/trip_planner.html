@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block title %}Trip Planner - {{ park.name }}{% endblock %}
+
+{% block content %}
+<div class="trip-planner-container">
+    <h1>Plan Your Trip to {{ park.name }}</h1>
+
+    <form method="post">
+        {% csrf_token %}
+        <label for="user_input">Optional: Provide extra info or preferences:</label><br>
+        <textarea id="user_input" name="user_input" placeholder="e.g., family with kids, nature walks..." rows="3">{{ request.POST.user_input }}</textarea><br>
+        <button type="submit" class="btn">Generate Trip Plan</button>
+    </form>
+
+    {% if error_msg %}
+        <p style="color: red; margin-top: 10px;">{{ error_msg }}</p>
+    {% endif %}
+
+    {% if plan %}
+        <div class="trip-plan">
+            <h2>Suggested Trip Plan:</h2>
+            <div class="plan-text">
+                {{ plan|linebreaks }}
+            </div>
+        </div>
+    {% endif %}
+
+    <div class="back-link">
+        <a href="{% url 'park_detail' park.id %}" class="btn">← Back to Park</a>
+    </div>
+</div>
+{% endblock %}
