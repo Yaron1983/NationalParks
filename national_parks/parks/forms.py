@@ -5,7 +5,7 @@ from .models import Park, Rating
 class ParkForm(forms.ModelForm):
     class Meta:
         model = Park
-        fields = ['name', 'description', 'location', 'country', 'region', 'image']
+        fields = ['name', 'description', 'location', 'country', 'region', 'image', 'flag', 'official_website']
 
 
 class RatingForm(forms.ModelForm):

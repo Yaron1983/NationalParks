@@ -4,6 +4,7 @@ import requests
 from django.core.files.base import ContentFile
 from django.core.management.base import BaseCommand
 from django.apps import apps
+from parks.models import Park
 
 WD_SPARQL = """
 SELECT ?item ?itemLabel ?itemDescription ?image ?countryLabel ?countryCode ?adminLabel WHERE {
@@ -30,7 +31,7 @@ ALLOWED_EXTENSIONS = {'.jpg', '.jpeg', '.png'}
 CACHE_FILE = "parks_wiki_cache.json"
 FLAGS_DIR = "media/flags/"
 
-os.makedirs(FLAGS_DIR, exist_ok=True)
+
 
 
 class Command(BaseCommand):
@@ -160,14 +161,11 @@ class Command(BaseCommand):
                         ))
 
             if country_code:
-                flag_path = self.download_flag(country_code)
-                relative_path = flag_path
-                if flag_path:
-                    if flag_path.startswith("media/"):
-                        relative_path = flag_path[len("media/"):]
-                    print(f"Downloaded image for {park.name}: {flag_path}")
+                success = download_flag_to_s3(park, country_code)
+                if success:
+                    flags_downloaded += 1
+                    self.stdout.write(f"Downloaded flag for {park.name}")
 
-                    park.flag.name = relative_path
                     park.save()
                     flags_downloaded += 1
 
@@ -191,3 +189,27 @@ class Command(BaseCommand):
             f"downloaded {images_downloaded} images, "
             f"downloaded {flags_downloaded} flags."
         ))
+
+def download_flag_to_s3(park, country_code):
+    """
+    הורד את דגל המדינה ושמור ישירות ב-park.flag ב-S3
+    """
+    if not country_code:
+        return False
+
+    country_code = country_code.lower()
+
+    if park.flag:
+        return False
+
+    url = f"https://flagcdn.com/w40/{country_code}.png"
+
+    try:
+        resp = requests.get(url, timeout=20)
+        resp.raise_for_status()
+        filename = f"{country_code}.png"
+        park.flag.save(filename, ContentFile(resp.content), save=True)
+        return True
+    except Exception as e:
+        print(f"Failed to download flag for {park.name}: {e}")
+        return False

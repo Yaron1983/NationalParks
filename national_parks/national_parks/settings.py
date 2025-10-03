@@ -12,10 +12,12 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 
+from django.conf.global_settings import DATABASES
+
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 TEMPLATES_DIR = BASE_DIR / "templates"
-MEDIA_URL = '/media/'
+# MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
 
 
@@ -31,7 +33,7 @@ SECRET_KEY = 'django-insecure-45zmjs2el!)-o)!fm9=pm$bql$+&s-w2=4@9l4eb9@v2et6e6r
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -46,6 +48,7 @@ INSTALLED_APPS = [
     'rest_framework',
     'accounts',
     'parks',
+    'storages',
 ]
 
 MIDDLEWARE = [
@@ -81,6 +84,17 @@ WSGI_APPLICATION = 'national_parks.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
+
+# DATABASES = {
+#     'default': {
+#         'ENGINE': 'django.db.backends.postgresql_psycopg2',
+#         'NAME': 'postgres',
+#         'USER': 'postgres',
+#         'PASSWORD': 'postgres',
+#         'HOST': 'database-1.c4rqskswendj.us-east-1.rds.amazonaws.com',
+#         'PORT': '5432',
+#     }
+# }
 
 DATABASES = {
     'default': {
@@ -133,3 +147,22 @@ STATICFILES_DIRS = [
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
+
+# AWS S3 Settings
+
+
+AWS_STORAGE_BUCKET_NAME = 'national-parks-bucket'
+AWS_S3_REGION_NAME = 'us-east-1'
+AWS_S3_CUSTOM_DOMAIN = f"{AWS_STORAGE_BUCKET_NAME}.s3.{AWS_S3_REGION_NAME}.amazonaws.com"
+
+MEDIA_URL = f"https://{AWS_S3_CUSTOM_DOMAIN}/media/"
+STORAGES = {
+    'default': {  # user uploads -> S3
+        'BACKEND': 'storages.backends.s3boto3.S3Boto3Storage',
+        'OPTIONS': {'location': 'media', 'default_acl':"public-read"},
+    },
+    'staticfiles': {  # admin static files -> local
+        'BACKEND': 'django.contrib.staticfiles.storage.StaticFilesStorage',
+        'OPTIONs': {'location': 'static'},
+    },
+}

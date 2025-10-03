@@ -8,8 +8,8 @@ class Park(models.Model):
     country = models.CharField(max_length=100, blank=True)
     region = models.CharField(max_length=100, blank=True)
     official_website = models.URLField(blank=True, null=True)
-    image = models.ImageField(upload_to='parks/', blank=True, null=True)
-    flag = models.ImageField(upload_to='flags/', blank=True, null=True)
+    image = models.ImageField(upload_to="parks/", blank=True, null=True)
+    flag = models.ImageField(upload_to="flags/", blank=True, null=True)
 
     def __str__(self):
         return self.name
