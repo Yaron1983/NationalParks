@@ -1,0 +1,224 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Chat Rooms{% endblock %}
+
+{% block content %}
+<div class="chat-container">
+  <h1>💬 Chat Rooms</h1>
+  
+  <div class="chat-info">
+    <p>Welcome to the chat rooms system! Here you can discuss national parks, share experiences, and ask questions.</p>
+    
+    <div class="chat-options">
+      <div class="option-card">
+        <h3>🚀 React Application</h3>
+        <p>Full user experience with real-time WebSockets</p>
+        <a href="http://localhost:3000" target="_blank" class="btn btn-primary">
+          Open Chat App
+        </a>
+      </div>
+      
+      <div class="option-card">
+        <h3>📱 API Endpoints</h3>
+        <p>Direct access to chat API</p>
+        <a href="/api/chat/rooms/" class="btn btn-secondary">
+          View API
+        </a>
+      </div>
+    </div>
+    
+    <div class="chat-instructions">
+      <h3>Usage Instructions:</h3>
+      <ol>
+        <li>Start the React app: <code>cd chat_frontend && npm start</code></li>
+        <li>The app will run on <a href="http://localhost:3000" target="_blank">http://localhost:3000</a></li>
+        <li>Create a new room or select an existing one</li>
+        <li>Start sending real-time messages!</li>
+      </ol>
+    </div>
+    
+    <div class="chat-rooms-preview">
+      <h3>Available Rooms:</h3>
+      <div id="rooms-list" class="rooms-preview">
+        <p>Loading rooms...</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+.chat-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 2rem;
+}
+
+.chat-container h1 {
+  color: #333;
+  margin-bottom: 1.5rem;
+  text-align: center;
+}
+
+.chat-info {
+  background: white;
+  padding: 2rem;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.chat-options {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 1.5rem;
+  margin: 2rem 0;
+}
+
+.option-card {
+  background: #f8f9fa;
+  padding: 1.5rem;
+  border-radius: 8px;
+  border: 2px solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.option-card:hover {
+  border-color: #667eea;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.option-card h3 {
+  margin-top: 0;
+  color: #333;
+}
+
+.option-card p {
+  color: #666;
+  margin-bottom: 1rem;
+}
+
+.btn {
+  display: inline-block;
+  padding: 0.75rem 1.5rem;
+  border-radius: 6px;
+  text-decoration: none;
+  font-weight: 600;
+  transition: all 0.3s ease;
+  border: none;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background: #667eea;
+  color: white;
+}
+
+.btn-primary:hover {
+  background: #5568d3;
+  transform: translateY(-1px);
+}
+
+.btn-secondary {
+  background: #6c757d;
+  color: white;
+}
+
+.btn-secondary:hover {
+  background: #5a6268;
+}
+
+.chat-instructions {
+  background: #e3f2fd;
+  padding: 1.5rem;
+  border-radius: 8px;
+  margin: 2rem 0;
+  border-left: 4px solid #2196f3;
+}
+
+.chat-instructions h3 {
+  margin-top: 0;
+  color: #1976d2;
+}
+
+.chat-instructions ol {
+  margin: 1rem 0;
+  padding-left: 1.5rem;
+}
+
+.chat-instructions li {
+  margin: 0.5rem 0;
+  color: #333;
+}
+
+.chat-instructions code {
+  background: #fff;
+  padding: 0.2rem 0.5rem;
+  border-radius: 4px;
+  font-family: monospace;
+  color: #d63384;
+}
+
+.chat-rooms-preview {
+  margin-top: 2rem;
+  padding-top: 2rem;
+  border-top: 2px solid #e9ecef;
+}
+
+.chat-rooms-preview h3 {
+  color: #333;
+  margin-bottom: 1rem;
+}
+
+.rooms-preview {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1rem;
+}
+
+.room-preview-card {
+  background: #f8f9fa;
+  padding: 1rem;
+  border-radius: 8px;
+  border: 1px solid #dee2e6;
+}
+
+.room-preview-card h4 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+}
+
+.room-preview-card p {
+  margin: 0.25rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+</style>
+
+<script>
+// Fetch and display available rooms
+fetch('/api/chat/rooms/')
+  .then(response => response.json())
+  .then(data => {
+    const roomsList = document.getElementById('rooms-list');
+    if (data.length === 0) {
+      roomsList.innerHTML = '<p>No rooms available yet. Create a new room in the React app!</p>';
+      return;
+    }
+    
+    roomsList.innerHTML = data.slice(0, 6).map(room => `
+      <div class="room-preview-card">
+        <h4>${room.name}</h4>
+        <p>💬 ${room.message_count || 0} messages</p>
+        <p>👥 ${room.participants?.length || 0} participants</p>
+        ${room.is_public ? '<p style="color: #1976d2;">🌐 Public</p>' : '<p style="color: #f57c00;">🔒 Private</p>'}
+      </div>
+    `).join('');
+  })
+  .catch(error => {
+    console.error('Error fetching rooms:', error);
+    document.getElementById('rooms-list').innerHTML = '<p>Error loading rooms. Make sure the server is running.</p>';
+  });
+</script>
+{% endblock %}
+

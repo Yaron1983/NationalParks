@@ -25,6 +25,7 @@ urlpatterns = [
     path('accounts/', include('accounts.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('api/', include('parks.api_urls')),
+    path('api/chat/', include('chat.api_urls')),
     path('parks/', include('parks.urls')),
     path('park/<int:pk>/', ParkDetailView.as_view(), name='park_detail'),
     path('park/<int:pk>/rate/', rate_park, name='rate_park'),
@@ -32,4 +33,6 @@ urlpatterns = [
 ]
 
 if settings.DEBUG:
+    from django.contrib.staticfiles.urls import staticfiles_urlpatterns
+    urlpatterns += staticfiles_urlpatterns()
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
